@@ -1,6 +1,6 @@
 # Setup — IntelliJ IDEA
 
-Get the app running, tests passing, and Git working without leaving the IDE. Prefer the terminal? Use [SETUP-CLI.md](SETUP-CLI.md) instead.
+Get the app running, the build passing, and Git working without leaving the IDE. Prefer the terminal? Use [SETUP-CLI.md](SETUP-CLI.md) instead.
 
 ## Before you start
 
@@ -43,13 +43,19 @@ Open http://localhost:8080 and log in with `student1 / Password123!`.
 
 Stop with the red ■ in the **Run** tool window; restart with **Shift+F10**.
 
-## 6. Run the tests
+## 6. Run the build and the smoke check
 
-Right-click `src/test/java` → **Run 'Tests in gallery'**. All green means your dev environment works.
+Open the **Maven** tool window → **gallery → Lifecycle** → double-click **verify**. This compiles the app and runs its one test, which only checks that the app starts — there are no other tests.
 
-While you're working, click the ▶ beside a single test class to run just that one — much faster than the full suite.
+Then, with the app still running from step 5, open the **Terminal** tool window (Alt+F12) and run the smoke check — the same script CI runs:
 
-> **Checkpoint ✅** App running locally, tests passing.
+```bash
+bash .github/smoke-check.sh
+```
+
+Every line should say `PASS`. On Windows the terminal must be **Git Bash**: **Settings → Tools → Terminal → Shell path** → `C:\Program Files\Git\bin\bash.exe`.
+
+> **Checkpoint ✅** App running locally, build passing, smoke check passing.
 
 ## Day-to-day Git in IntelliJ
 
@@ -69,7 +75,7 @@ Name branches in the New Branch dialog exactly as the rules require: `feature/<i
 
 ## Running the CI build locally
 
-CI runs Maven, not IntelliJ, so this is the command that decides whether your PR goes green. Use the **Terminal** tool window (Alt+F12):
+CI runs Maven and the smoke check, not IntelliJ, so these are the commands that decide whether your PR goes green. Use the **Terminal** tool window (Alt+F12):
 
 ```bash
 ./mvnw verify

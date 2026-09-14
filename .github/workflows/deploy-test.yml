@@ -1,5 +1,12 @@
 # Deploys the develop branch to the team's TEST server on every merge.
-# Requires repo secrets: TEST_HOST, TEST_USER, TEST_SSH_KEY (set by your instructor).
+#
+# Needs (set up by your instructor):
+#   - repo secrets TEST_HOST (the test VM's address) and DEPLOY_USER
+#   - the team's self-hosted runner (ops-runner VM) registered to this repo,
+#     holding the deploy key at ~/.ssh/deploy_key — see 06b-proxmox-tus-lab-setup.md
+#
+# GitHub's own runners cannot reach the campus test server, so the deploy job
+# runs on the self-hosted runner. Both jobs skip themselves in the template repo.
 name: deploy-test
 
 on:
@@ -12,6 +19,7 @@ concurrency:
 
 jobs:
   build-and-push:
+    if: ${{ !github.event.repository.is_template }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -26,7 +34,7 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Build and test
+      - name: Build
         run: ./mvnw --batch-mode verify
 
       - name: Log in to GitHub Container Registry
@@ -36,33 +44,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build and push image (image names must be lower case)
         run: |
-          IMAGE=ghcr.io/${{ github.repository }}:test-latest
-          docker build -t "$IMAGE" -t ghcr.io/${{ github.repository }}:develop-${{ github.sha }} .
-          docker push --all-tags ghcr.io/${{ github.repository }}
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY,,}"
+          docker build -t "$IMAGE:test-latest" -t "$IMAGE:develop-${{ github.sha }}" .
+          docker push --all-tags "$IMAGE"
 
   deploy:
     needs: build-and-push
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - name: Deploy to test server over SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.TEST_HOST }}
-          username: ${{ secrets.TEST_USER }}
-          key: ${{ secrets.TEST_SSH_KEY }}
-          script: |
-            cd ~/gallery
-            docker compose pull app
-            docker compose up -d app
+      - uses: actions/checkout@v4
 
-      - name: Smoke test — wait for the app to report healthy
+      - name: Deploy to the test server over SSH
         run: |
-          for i in $(seq 1 24); do
-            if curl -fsS "http://${{ secrets.TEST_HOST }}:8080/actuator/health" | grep -q UP; then
-              echo "Healthy ✅" && exit 0
-            fi
-            echo "Waiting for app... ($i/24)" && sleep 5
-          done
-          echo "App did not become healthy within 2 minutes" && exit 1
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=accept-new \
+            "${{ secrets.DEPLOY_USER }}@${{ secrets.TEST_HOST }}" \
+            "cd ~/gallery && docker compose pull app && docker compose up -d app"
+
+      - name: Smoke check the test server
+        env:
+          BASE_URL: http://${{ secrets.TEST_HOST }}:8080
+        run: bash .github/smoke-check.sh

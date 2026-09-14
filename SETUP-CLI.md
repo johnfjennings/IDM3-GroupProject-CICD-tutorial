@@ -1,6 +1,6 @@
 # Setup — Command Line
 
-Get the app running, tests passing, and Git working from the terminal with the editor of your choice. Prefer an IDE to do it for you? Use [SETUP-INTELLIJ.md](SETUP-INTELLIJ.md) instead.
+Get the app running, the build passing, and Git working from the terminal with the editor of your choice. Prefer an IDE to do it for you? Use [SETUP-INTELLIJ.md](SETUP-INTELLIJ.md) instead.
 
 These are also the exact commands CI runs, so this guide is the reference when a PR goes red.
 
@@ -52,21 +52,23 @@ Open http://localhost:8080 and log in with `student1 / Password123!`.
 
 Stop it with **Ctrl+C**.
 
-## 4. Run the tests
+## 4. Run the build and the smoke check
 
 ```bash
-./mvnw test
+./mvnw verify
 ```
 
-All green means your dev environment works.
+This compiles the app and runs its one test, which only checks that the app starts. There are no other tests to run.
 
-A single test class, while you're working:
+With the app running (step 3, in another terminal), run the smoke check — the same script CI runs:
 
 ```bash
-./mvnw test -Dtest=LoginControllerTest
+bash .github/smoke-check.sh
 ```
 
-> **Checkpoint ✅** App running locally, tests passing.
+Every line should say `PASS`. On Windows, run it from **Git Bash**, not PowerShell.
+
+> **Checkpoint ✅** App running locally, build passing, smoke check passing.
 
 ## The command CI runs
 
@@ -74,7 +76,7 @@ A single test class, while you're working:
 ./mvnw verify
 ```
 
-This is what decides whether your PR goes green — it compiles, runs tests, and packages the app. Run it before you push and you'll catch most red builds on your own machine.
+CI runs this first, then starts the app and runs the smoke check. It compiles the app, checks it starts, and packages it. Run it — and the smoke check — before you push and you'll catch most red builds on your own machine.
 
 ## Day-to-day Git
 
@@ -115,4 +117,5 @@ Optional but worth it: the [GitHub CLI](https://cli.github.com/) (`gh`) lets you
 | `'mvnw' is not recognized` | You're in PowerShell/CMD — use `.\mvnw.cmd` |
 | Port 8080 already in use | An old run is still going. macOS/Linux: `lsof -i :8080` then `kill <pid>`. Windows: `netstat -ano \| findstr :8080` then `taskkill /PID <pid> /F` |
 | `Cannot connect to the Docker daemon` | Docker Desktop isn't running. Start it, then retry |
-| Tests pass locally but CI is red | Run `./mvnw verify` — it does more than `test` |
+| CI's smoke check fails but the app works for you | Run `bash .github/smoke-check.sh` against your running app — the `FAIL` line names the page and the text it expected |
+| `$'\r': command not found` running the smoke check | The script has Windows line endings. Run `git add --renormalize .` and commit |

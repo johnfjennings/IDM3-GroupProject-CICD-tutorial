@@ -1,4 +1,4 @@
-# CI: builds and tests every pull request and every push to develop.
+# CI: builds, starts and smoke-checks every pull request and every push to develop.
 # Read this file top-to-bottom — Week 1 tutorial, Part 2 explains each step.
 name: ci
 
@@ -21,8 +21,15 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Build and run all tests
+      - name: Build (compiles the app and checks it starts)
         run: ./mvnw --batch-mode verify
 
-      - name: Build Docker image (proves the Dockerfile works; not pushed on PRs)
-        run: docker build -t gallery:${{ github.sha }} .
+      - name: Start the app and MySQL (also proves the Dockerfile builds)
+        run: docker compose up -d --build
+
+      - name: Smoke check
+        run: bash .github/smoke-check.sh
+
+      - name: Show the app log if anything failed
+        if: failure()
+        run: docker compose logs app

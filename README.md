@@ -5,10 +5,12 @@ Week 1 starting point for the IDM3 Gallery group project. Follow the **Week 1 tu
 ## Your test environment
 
 > **Test server URL**: `http://REPLACE-ME:8080` *(your instructor sets this per team)*
+>
+> It works only from a college lab machine — there is no access from off campus.
 
 ## Choose your setup guide
 
-Both guides get you to the same place: the app running locally, tests passing, ready to open your first PR. Pick one and work through it.
+Both guides get you to the same place: the app running locally, the build passing, ready to open your first PR. Pick one and work through it.
 
 | Guide | Use this if |
 | --- | --- |
@@ -25,8 +27,9 @@ Agree as a team which guide you're all using. Mixed setups are fine, but same-to
 | --- | --- |
 | `src/main/java/ie/tus/gallery` | Spring Boot app: public pages + form login (in-memory users for now) |
 | `src/main/resources/templates` | `home`, `team`, `login`, `dashboard` Thymeleaf views |
-| `src/test/java` | MockMvc tests — CI runs these on every PR |
-| `.github/workflows/ci.yml` | Builds + tests every PR |
+| `src/test/java` | One generated test that checks the app starts — you will not write tests in this project |
+| `.github/workflows/ci.yml` | Builds, starts and smoke-checks every PR |
+| `.github/smoke-check.sh` | The pages CI checks and the text each must contain — add your own pages here |
 | `.github/workflows/deploy-test.yml` | Auto-deploys `develop` to the test server |
 | `docker-compose.yml` | Local dev: app + MySQL |
 | `application-{dev,test,prod}.yml` | One config per environment |
@@ -39,7 +42,7 @@ Log in with `student1 / Password123!` — dev/test only, never in prod.
 
 1. Never push to `develop` or `main` — branch, then PR.
 2. PRs need green CI **and** one teammate approval.
-3. Never merge on red; never delete a test to make CI pass.
+3. Never merge on red; never delete a smoke check line to make CI pass.
 4. Branch names: `feature/<issue-number>-<short-name>`.
 
 ## Roadmap
