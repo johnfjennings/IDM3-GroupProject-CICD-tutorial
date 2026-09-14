@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard — TUS Gallery</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body>
+<nav>
+    <a href="/">TUS Gallery</a>
+    <span>
+        <a href="/team">Team</a>
+        <form th:action="@{/logout}" method="post" style="display:inline">
+            <button type="submit" class="link-button">Logout</button>
+        </form>
+    </span>
+</nav>
+<main>
+    <h1>Dashboard</h1>
+    <p>You are logged in as <strong sec:authentication="name">user</strong>.</p>
+    <p>Role dashboards are built in Weeks 5–10 — one vertical per team member.</p>
+</main>
+</body>
+</html>

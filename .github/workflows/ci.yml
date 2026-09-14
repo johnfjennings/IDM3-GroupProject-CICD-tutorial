@@ -1,0 +1,28 @@
+# CI: builds and tests every pull request and every push to develop.
+# Read this file top-to-bottom — Week 1 tutorial, Part 2 explains each step.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [develop]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: Build and run all tests
+        run: ./mvnw --batch-mode verify
+
+      - name: Build Docker image (proves the Dockerfile works; not pushed on PRs)
+        run: docker build -t gallery:${{ github.sha }} .

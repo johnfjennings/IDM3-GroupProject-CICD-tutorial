@@ -1,0 +1,33 @@
+# Local dev environment.
+# Week 1: only the db service is used (as practice — the app doesn't need it yet).
+# Week 3: the app connects to it when JPA + Flyway are added.
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: gallery
+      MYSQL_USER: gallery
+      MYSQL_PASSWORD: gallerypass
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  dbdata:

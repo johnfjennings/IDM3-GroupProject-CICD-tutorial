@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — TUS Gallery</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body>
+<nav>
+    <a href="/">TUS Gallery</a>
+    <span>
+        <a href="/team">Team</a>
+        <a href="/login">Login</a>
+    </span>
+</nav>
+<main>
+    <!-- Week 1 tutorial PR #2 changes this heading. LoginControllerTest asserts its exact text. -->
+    <h1>Sign in to TUS Gallery</h1>
+
+    <div th:if="${param.error}" class="alert">Invalid username or password.</div>
+    <div th:if="${param.logout}" class="notice">You have been logged out.</div>
+
+    <form th:action="@{/login}" method="post">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+
+        <button type="submit">Sign in</button>
+    </form>
+</main>
+</body>
+</html>

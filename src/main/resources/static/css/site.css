@@ -1,0 +1,76 @@
+/* Minimal skeleton styles — replaced by the team design system from Week 2 */
+:root {
+    --brand: #1a5276;
+    --bg: #f7f9fa;
+    --text: #1c2833;
+    --card: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: var(--brand);
+}
+
+nav a, nav .link-button {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1rem;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+main {
+    max-width: 60rem;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 1rem;
+}
+
+.team-card {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+form label { display: block; margin-top: 1rem; }
+
+form input {
+    display: block;
+    width: 100%;
+    max-width: 20rem;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+form button[type="submit"] {
+    margin-top: 1rem;
+    padding: 0.5rem 1.5rem;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.alert { color: #922b21; background: #fadbd8; padding: 0.75rem; border-radius: 4px; }
+.notice { color: #1e8449; background: #d5f5e3; padding: 0.75rem; border-radius: 4px; }
