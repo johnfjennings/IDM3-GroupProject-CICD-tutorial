@@ -104,4 +104,5 @@ Everything else here is identical.
 | App starts but login fails | Active profile isn't `dev`. Check **Edit Configurations** |
 | `Cannot connect to the Docker daemon` | Docker Desktop isn't running. Start it, then retry |
 | Page won't load; Run window says `Request header is too large` | Your browser is sending too many cookies saved for `localhost`. Open http://127.0.0.1:8080 instead, or clear cookies for localhost |
+| Every smoke check line says `FAIL` but the site loads in your browser | You ran `bash` from PowerShell, which starts WSL — a separate Linux that cannot reach port 8080 on Windows. Run the script from a **Git Bash** window instead |
 | Changes to a template don't show | Rebuild with Ctrl+F9 / ⌘F9, then refresh the browser |
