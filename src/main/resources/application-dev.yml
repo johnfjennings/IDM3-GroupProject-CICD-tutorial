@@ -1,6 +1,10 @@
 # Local development on your laptop (Docker Compose provides MySQL from Week 3)
 server:
   port: 8080
+  # Browsers send every cookie saved for localhost with each request. Other apps
+  # run at localhost can leave enough of them to exceed Tomcat's 8 KB default,
+  # which fails every page with "Request header is too large". Dev only.
+  max-http-request-header-size: 64KB
 
 spring:
   thymeleaf:

@@ -117,5 +117,6 @@ Optional but worth it: the [GitHub CLI](https://cli.github.com/) (`gh`) lets you
 | `'mvnw' is not recognized` | You're in PowerShell/CMD — use `.\mvnw.cmd` |
 | Port 8080 already in use | An old run is still going. macOS/Linux: `lsof -i :8080` then `kill <pid>`. Windows: `netstat -ano \| findstr :8080` then `taskkill /PID <pid> /F` |
 | `Cannot connect to the Docker daemon` | Docker Desktop isn't running. Start it, then retry |
+| Page won't load; log says `Request header is too large` | Your browser is sending too many cookies saved for `localhost`. Open http://127.0.0.1:8080 instead, or clear cookies for localhost |
 | CI's smoke check fails but the app works for you | Run `bash .github/smoke-check.sh` against your running app — the `FAIL` line names the page and the text it expected |
 | `$'\r': command not found` running the smoke check | The script has Windows line endings. Run `git add --renormalize .` and commit |

@@ -103,4 +103,5 @@ Everything else here is identical.
 | Port 8080 already in use | An old run is still going. Red ■ in the **Run** window, or check **Services** |
 | App starts but login fails | Active profile isn't `dev`. Check **Edit Configurations** |
 | `Cannot connect to the Docker daemon` | Docker Desktop isn't running. Start it, then retry |
+| Page won't load; Run window says `Request header is too large` | Your browser is sending too many cookies saved for `localhost`. Open http://127.0.0.1:8080 instead, or clear cookies for localhost |
 | Changes to a template don't show | Rebuild with Ctrl+F9 / ⌘F9, then refresh the browser |
